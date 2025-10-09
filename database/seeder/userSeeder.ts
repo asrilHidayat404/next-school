@@ -1,4 +1,4 @@
-import { copyDefaultAvatar } from "@/action/AuthenticationAction";
+import { copyDefaultAvatar } from "@/src/action/AuthenticationAction";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 

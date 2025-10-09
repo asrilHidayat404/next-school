@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
-import { accessRules } from "./lib/access-rules"
-import { auth } from "./lib/auth"
+import { accessRules } from "./src/lib/access-rules"
+import { auth } from "./src/lib/auth"
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const session = await auth()
@@ -14,9 +15,11 @@ export async function middleware(request: NextRequest) {
 
   // 🎯 otorisasi role
   if (pathname.startsWith("/dashboard") && session) {
-    const allowedRoles = accessRules[pathname]
+    const allowed = accessRules.some(
+      (rule) => rule.pattern.test(pathname) && rule.roles.includes(session.user.role)
+    )
 
-    if (allowedRoles && !allowedRoles.includes(session.user.role)) {
+    if (!allowed) {
       return NextResponse.redirect(new URL("/403", request.url)) // bikin page 403
     }
   }
@@ -26,5 +29,5 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: ["/dashboard/:path*"],
-    runtime: "nodejs", 
+  runtime: "nodejs",
 }
