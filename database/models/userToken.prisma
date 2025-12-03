@@ -1,0 +1,13 @@
+model UserToken {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String // "RESET_PASSWORD", "EMAIL_VERIFY", dsb
+  token     String   @unique
+  expires   DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
+  @@index([expires])
+}

@@ -27,6 +27,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       .map((seg) => seg.charAt(0).toUpperCase() + seg.slice(1));
   }, [routes]);
 
+  function formatBreadcrumb(segment: string) {
+    return segment
+      .replace(/-/g, " ") // ubah kebab-case ke spasi
+      .replace(/\b\w/g, (char) => char.toUpperCase()); // kapitalisasi tiap kata
+  }
+
   return (
     <SessionProvider>
       <SidebarProvider>
@@ -41,34 +47,28 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               />
               <Breadcrumb>
                 <BreadcrumbList>
-                  {pathname?.map((path, i) => {
+                  {pathname.map((segment, i) => {
                     const href =
                       "/" +
                       pathname
                         .slice(0, i + 1)
                         .join("/")
-                        .toLocaleLowerCase();
+                        .toLowerCase();
                     const isLast = i === pathname.length - 1;
-                    // helper: "log-activity" => "Log Activity"
-                    const formatPath = (str: string) =>
-                      str
-                        .split("-")
-                        .map(
-                          (word) => word.charAt(0).toUpperCase() + word.slice(1)
-                        )
-                        .join(" ");
 
                     return (
                       <BreadcrumbItem key={i}>
                         {!isLast ? (
                           <>
                             <BreadcrumbLink href={href}>
-                              {formatPath(path)}
+                              {formatBreadcrumb(decodeURIComponent(segment))}
                             </BreadcrumbLink>
                             <BreadcrumbSeparator className="hidden md:block" />
                           </>
                         ) : (
-                          <BreadcrumbPage> {formatPath(path)}</BreadcrumbPage>
+                          <BreadcrumbPage>
+                            {formatBreadcrumb(decodeURIComponent(segment))}
+                          </BreadcrumbPage>
                         )}
                       </BreadcrumbItem>
                     );

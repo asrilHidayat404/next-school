@@ -22,6 +22,9 @@ async function main() {
       email: "super.admin@gmail.com",
       password: hashedPassword,
       role_id: 1,
+      phone_number: "082324892",
+      address: "Indonesia",
+      gender: "male",
       avatar: "", // nanti bisa isi default avatar
     },
   });

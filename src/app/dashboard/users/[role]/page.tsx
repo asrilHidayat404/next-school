@@ -8,6 +8,9 @@ import { paginate } from "@/src/lib/paginate";
 import SearchForm from "@/src/views/components/User/SearchUserForm";
 import { buildSearchWhere } from "@/src/helpers/buildSearchWhere";
 import { parseSearchParams } from "@/src/helpers/parseSearchParams";
+import Link from "next/link";
+import { Prisma } from "@prisma/client";
+import ExportButton from "@/src/views/components/User/ExportUserButton";
 
 interface PageProps {
   params: { role: string };
@@ -48,7 +51,15 @@ const Page = async ({ params, searchParams }: PageProps) => {
     "email",
   ]);
 
-  const { data: users, pagination } = await paginate({
+  const { data: users, pagination } = await paginate<
+      typeof db.user,
+      Prisma.UserFindManyArgs,
+      Prisma.UserGetPayload<{ 
+        include: { 
+          role: true,
+        } 
+      }>[]
+    >({
     model: db.user,
     args: {
       where: whereClause,
@@ -58,6 +69,13 @@ const Page = async ({ params, searchParams }: PageProps) => {
     page: currentPage,
     perPage: 10,
   });
+
+  const roleChoices = await db.role.findMany({
+    select:{
+      id: true,
+      role_name: true
+    }
+  })
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -82,9 +100,9 @@ const Page = async ({ params, searchParams }: PageProps) => {
 
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-                <ExportUserButton query={role} />
+                <ExportButton label="Export User" url="/api/" />
                 <ImportUserButton />
-                <CreateUserForm />
+                <CreateUserForm roleChoices={roleChoices} />
               </div>
             </div>
           </div>

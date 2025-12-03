@@ -1,35 +1,42 @@
 "use client";
+
 import { Search } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { Input } from "../ui/input";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 
-interface SearchUserFormProps {
+interface SearchFormProps {
   initialSearch?: string;
+  placeholder?: string;
+  searchKey?: string; // default "search" (kalau mau pake searchKey lain, misalnya "query")
 }
 
-const SearchForm = ({ initialSearch = "" }: SearchUserFormProps) => {
+const SearchForm = ({
+  initialSearch = "",
+  placeholder = "Cari data...",
+  searchKey = "search",
+}: SearchFormProps) => {
   const [query, setQuery] = useState(initialSearch);
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Sync dengan initialSearch prop
+  // Sync dengan initialSearch dari parent
   useEffect(() => {
     setQuery(initialSearch);
   }, [initialSearch]);
 
-  // Debounced search untuk optimasi performa
+  // Debounced search
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    
+
     if (term) {
-      params.set('search', term);
-      params.delete('page'); // Reset ke halaman 1 saat search baru
+      params.set(searchKey, term);
+      params.delete("page"); // reset ke page 1 saat ganti query
     } else {
-      params.delete('search');
+      params.delete(searchKey);
     }
-    
+
     router.push(`?${params.toString()}`, { scroll: false });
   }, 300);
 
@@ -40,9 +47,9 @@ const SearchForm = ({ initialSearch = "" }: SearchUserFormProps) => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
-      handleSearch.flush(); // Immediately execute the search
+      handleSearch.flush(); // langsung eksekusi tanpa delay
     }
   };
 
@@ -50,8 +57,8 @@ const SearchForm = ({ initialSearch = "" }: SearchUserFormProps) => {
     <div className="relative flex-1 min-w-[200px]">
       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
       <Input
-        placeholder="Search users by name or email..."
-        className="pl-9 h-9 text-sm"
+        placeholder={placeholder}
+        className="pl-9 h-8 text-sm"
         value={query}
         onChange={handleChange}
         onKeyDown={handleKeyDown}

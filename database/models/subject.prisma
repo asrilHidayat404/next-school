@@ -1,0 +1,15 @@
+model Subject {
+  id_subject   String @id @default(cuid())
+  subject_name String
+
+  class_id   String?
+  teacher_id String?
+
+  class     SchoolClass? @relation(fields: [class_id], references: [id_class], onUpdate: Cascade, onDelete: SetNull)
+  teacher   Teacher?     @relation(fields: [teacher_id], references: [id_teacher], onUpdate: Cascade, onDelete: SetNull)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@unique([subject_name, class_id])
+  @@map("subjects")
+}

@@ -1,0 +1,10 @@
+model School {
+  id_school   String @id @default(cuid())
+  school_name String @unique
+
+  classes   SchoolClass[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("schools")
+}

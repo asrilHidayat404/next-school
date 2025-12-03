@@ -1,0 +1,1 @@
+export const toStr = (v: FormDataEntryValue | null):string => typeof v === "string" ? v.trim() : "";

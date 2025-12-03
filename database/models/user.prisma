@@ -1,0 +1,26 @@
+model User {
+  id            String          @id @default(cuid())
+  full_name     String
+  email         String          @unique
+  password      String
+  emailVerified DateTime?
+  avatar        String?
+  address       String
+  phone_number  String
+  gender        String
+  accounts      Account[]
+  sessions      Session[]
+  Authenticator Authenticator[]
+  userTokens    UserToken[]
+  role_id       Int
+
+  role        Role          @relation(fields: [role_id], references: [id], onUpdate: Cascade)
+  activityLog ActivityLog[]
+  student     Student?
+  teacher     Teacher?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}

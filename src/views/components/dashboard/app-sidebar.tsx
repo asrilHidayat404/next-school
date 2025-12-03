@@ -17,13 +17,13 @@ import { TeamSwitcher } from "./team-switcher"
 import { NavMain } from "./nav-main"
 import { NavProjects } from "./nav-projects"
 import { NavUser } from "./nav-user"
+import {NavMaster } from "./nav-master"
 import { data } from "@/src/lib/routes"
 import ThemeButton from "../ThemeButton"
 import { useSession } from "next-auth/react"
 import { ScrollArea } from "../ui/scroll-area"
 import Link from "next/link"
 import { ActivitySquare } from "lucide-react"
-
 
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -36,8 +36,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
             <SidebarContent>
                 <ScrollArea className="h-full">
-                    <NavMain items={data.navMain} role={session?.user.role ?? "guest"} />
-                    <NavProjects projects={data.projects} role={session?.user.role ?? "guest"} />
+                    <NavMain items={data.settings} role={session?.user.role ?? "guest"} />
+                    {/* <NavProjects projects={data.projects} role={session?.user.role ?? "guest"} /> */}
+                    <NavMaster label="Pengguna" items={data.users} role={session?.user.role ?? "guest"} />
+                    <NavMaster label="Mastering" items={data.academic} role={session?.user.role ?? "guest"} />
+                    <NavMaster label="Institusi" items={data.institution} role={session?.user.role ?? "guest"} />
                     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
                         <SidebarGroupLabel>Appearance</SidebarGroupLabel>
                         <SidebarMenu>

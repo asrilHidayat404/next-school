@@ -1,0 +1,19 @@
+model Teacher {
+  id_teacher          String  @id @default(cuid())
+  nip                 String  @unique
+  user_id             String  @unique
+  user                User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  teaching_classes_id String?
+
+  // 🔹 Relasi 1-1: wali kelas
+  homeroom_of SchoolClass? @relation("HomeroomTeacher")
+
+  teaching_classes SchoolClass? @relation("TeachingClasses", fields: [teaching_classes_id], references: [id_class], onDelete: Cascade, onUpdate: Cascade)
+
+  subject Subject[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("teachers")
+}

@@ -7,6 +7,7 @@ import Credentials from "next-auth/providers/credentials";
 import { schema } from "./schema";
 import db from "./db";
 import bcrypt from "bcryptjs";
+import { logActivity } from "../helpers/logActivity";
 
 const adapter = PrismaAdapter(db);
 
@@ -18,7 +19,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         email: {},
         password: {},
       },
-      authorize: async (credentials) => {
+      authorize: async (credentials: any): Promise<any> => {
         const validatedCredentials = schema.parse(credentials);
 
         const user = await db.user.findUnique({
@@ -28,19 +29,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           },
         });
 
-        if (!user) {
+        if (!user || !user.password) {
           throw new Error("Invalid credentials.");
         }
-
-        if (!user.password) {
-          throw new Error("Invalid credentials.");
-        }
-
         const match = await bcrypt.compare(
           validatedCredentials.password,
           user.password
         );
-        console.log({match})
         if (!match) {
           throw new Error("Invalid credentials.");
         }
@@ -56,7 +51,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return token;
     },
-    async session({ session, user }) {
+    async session({ session, user }): Promise<any> {
       const role = await db.role.findUnique({
         where: {
           id: user.role_id,
@@ -80,15 +75,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (params.token?.credentials) {
         const sessionToken = uuid();
 
-        if (!params.token.sub) {
+        if (!params.token.sub || !params.token.email) {
           throw new Error("No user ID found in token");
         }
 
         const createdSession = await adapter?.createSession?.({
           sessionToken: sessionToken,
           userId: params.token.sub,
-          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          expires: new Date(Date.now() + 1 * 60 * 60 * 1000),
         });
+        
 
         if (!createdSession) {
           throw new Error("Failed to create session");
@@ -104,20 +100,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       try {
         // Untuk signIn, kita belum punya request object di events
         // Jadi kita akan simpan dengan nilai default dulu
-        await db.activityLog.create({
-          data: {
-            userId: user.id,
-            event: "USER_AUTHENTICATION",
-            type: "Login",
-            effected: `User: ${user.email || user.id}`,
-            details: {
-              provider: account?.provider,
-              isNewUser: isNewUser,
-              accountType: account?.type,
-            },
-            ipAddress: "system", // Akan diupdate via middleware
-            userAgent: "system", // Akan diupdate via middleware
-            timestamp: new Date(),
+        await logActivity({
+          userId: user.id,
+          event: "USER_AUTHENTICATION",
+          type: "Login",
+          effected: `User: ${user.email || user.id}`,
+          details: {
+            provider: account?.provider,
+            isNewUser: isNewUser,
+            accountType: account?.type,
           },
         });
       } catch (error) {
@@ -125,28 +116,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
     },
 
-    async signOut({ session }) {
+    async signOut({ session }: any) {
       const user = await db.user.findUnique({
         where: {
-          id: session?.userId
-        }
-      })
-      
+          id: session?.userId,
+        },
+      });
+
       try {
-        await db.activityLog.create({
-          data: {
-            userId: session?.userId ?? undefined,
-            event: "USER_AUTHENTICATION",
-            type: "Logout",
-            effected: `User: ${
-              user?.email || "unknown"
-            }`,
-            details: {
-              sessionEnd: new Date().toISOString(),
-            },
-            ipAddress: "system",
-            userAgent: "system",
-            timestamp: new Date(),
+        await logActivity({
+          userId: session?.userId ?? undefined,
+          event: "USER_AUTHENTICATION",
+          type: "Logout",
+          effected: `User: ${user?.email || "unknown"}`,
+          details: {
+            sessionEnd: new Date().toISOString(),
           },
         });
       } catch (error) {

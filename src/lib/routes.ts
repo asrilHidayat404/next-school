@@ -1,83 +1,170 @@
-import { BookOpen, Bot, Frame, PieChart, Settings2, SquareTerminal } from "lucide-react"
+import {
+  BookOpen,
+  Bot,
+  Frame,
+  GraduationCapIcon,
+  PieChart,
+  School,
+  Settings2,
+  SquareTerminal,
+  University,
+  Users2,
+} from "lucide-react";
 
 export const data = {
-    navMain: [
-         {
-            title: "Data Pengguna",
-            url: "/dashboard/users",
-            icon: SquareTerminal,
-            roles: ["superadmin", "admin"], // ✅ semua boleh
-            items: [
-                {
-                    title: "Users",
-                    url: "/dashboard/users/",
-                    roles: ["superadmin", "admin"], // ✅ khusus admin
-                },
-                {
-                    title: "Admin",
-                    url: "/dashboard/users/admin",
-                    roles: ["superadmin", "admin"], // ✅ khusus admin
-                },
-                {
-                    title: "Staff",
-                    url: "/dashboard/users/staff",
-                    roles: ["superadmin", "admin"], // ✅ khusus admin
-                },
-                {
-                    title: "Guru",
-                    url: "/dashboard/users/teacher",
-                    roles: ["superadmin", "admin"], // ✅ khusus admin
-                },
-                {
-                    title: "Siswa",
-                    url: "/dashboard/users/student",
-                    roles: ["superadmin", "admin"], // ✅ khusus admin
-                },
-            ],
-        },
-        // {
-        //     title: "Data Master",
-        //     url: "/dashboard/masters",
-        //     icon: SquareTerminal,
-        //     roles: ["superadmin", "admin"], // ✅ semua boleh
-        //     items: [
-        //         {
-        //             title: "Masters",
-        //             url: "/dashboard/masters",
-        //             roles: ["superadmin", "admin"], // ✅ khusus admin
-        //         },
-        //         {
-        //             title: "Sekolah",
-        //             url: "/dashboard/masters/schools",
-        //             roles: ["superadmin", "admin"], // ✅ hanya admin
-        //         },
-        //         {
-        //             title: "Kelas",
-        //             url: "/dashboard/masters/classes",
-        //             roles: ["superadmin", "admin"], // ✅ hanya admin
-        //         },
-        //         {
-        //             title: "Materi",
-        //             url: "/dashboard/masters/subjects",
-        //             roles: ["superadmin", "admin"], // ✅ hanya admin
-        //         },
-        //     ],
-        // },
+    /** ==============================
+   *  PENGATURAN SISTEM
+   *  ============================== */
+  settings: [
+    // {
+    //   title: "Pengaturan",
+    //   url: "/dashboard/settings",
+    //   icon: Settings2,
+    //   roles: ["superadmin", "admin"],
+    //   items: [
+    //     {
+    //       title: "Profil Sekolah",
+    //       url: "/dashboard/settings/general",
+    //       roles: ["superadmin", "admin"],
+    //     },
+    //     {
+    //       title: "Reset Password",
+    //       url: "/dashboard/settings/auth",
+    //       roles: ["superadmin"],
+    //     },
+    //   ],
+    // },
+  ],
 
-    ],
-    projects: [
-        {
-            name: "Design Engineering",
-            url: "/projects/design",
-            icon: Frame,
-            roles: ["admin", "user"],
-        },
-        {
-            name: "Sales & Marketing",
-            url: "/projects/sales",
-            icon: PieChart,
-            roles: ["admin"],
-        },
-    ]
+  
+  /** ==============================
+   *  MANAJEMEN PENGGUNA / USER
+   *  ============================== */
+  users: [
+    // {
+    //   title: "Pengguna",
+    //   url: "/dashboard/users",
+    //   icon: Users2,
+    //   roles: ["superadmin", "admin"],
+    //   items: [
+    //     {
+    //       title: "Semua Pengguna",
+    //       url: "/dashboard/users",
+    //       roles: ["superadmin", "admin"],
+    //     },
+    //     {
+    //       title: "Admin",
+    //       url: "/dashboard/users/admin",
+    //       roles: ["superadmin"],
+    //     },
+    //     {
+    //       title: "Staff",
+    //       url: "/dashboard/users/staff",
+    //       roles: ["superadmin", "admin"],
+    //     },
+    //     {
+    //       title: "Teacher",
+    //       url: "/dashboard/users/teacher",
+    //       roles: ["superadmin", "admin"],
+    //     },
+    //     {
+    //       title: "Student",
+    //       url: "/dashboard/users/student",
+    //       roles: ["superadmin", "admin"],
+    //     },
+    //   ],
+    // },
+  ],
 
-}
+
+
+  /** ==============================
+   *  MANAJEMEN AKADEMIK
+   *  ============================== */
+  academic: [
+    // {
+    //   title: "Laporan",
+    //   url: "/dashboard",
+    //   icon: SquareTerminal,
+    //   roles: ["superadmin", "admin", "teacher", "staff", "student"],
+    // },
+    {
+      title: "Akademik",
+      url: "/dashboard/academic",
+      icon: GraduationCapIcon,
+      roles: ["superadmin", "admin"],
+      items: [
+        {
+          title: "Guru",
+          url: "/dashboard/guru",
+          roles: ["superadmin", "admin"],
+        },
+        {
+          title: "Siswa",
+          url: "/dashboard/siswa",
+          roles: ["superadmin", "admin"],
+        },
+        {
+          title: "Kelas",
+          url: "/dashboard/kelas",
+          roles: ["superadmin", "admin"],
+        },
+        {
+          title: "Mata Pelajaran",
+          url: "/dashboard/mata-pelajaran",
+          roles: ["superadmin", "admin"],
+        },
+      ],
+    },
+    // {
+    //   title: "Pembelajaran",
+    //   url: "/dashboard/academic",
+    //   icon: GraduationCapIcon,
+    //   roles: ["superadmin", "admin"],
+    //   items: [
+    //     {
+    //       title: "Mata Pelajaran",
+    //       url: "/dashboard/users/teacher",
+    //       roles: ["superadmin", "admin"],
+    //     },
+    //     {
+    //       title: "Penilaian",
+    //       url: "/dashboard/users/student",
+    //       roles: ["superadmin", "admin"],
+    //     },
+    //   ],
+    // },
+  ],
+
+  /** ==============================
+   *  MANAJEMEN LEMBAGA / SEKOLAH
+   *  ============================== */
+  institution: [
+    //  {
+    //   title: "Laporan",
+    //   url: "/dashboard",
+    //   icon: SquareTerminal,
+    //   roles: ["superadmin", "admin", "teacher", "staff", "student"],
+    // },
+    {
+      title: "Lembaga",
+      url: "/dashboard/institution",
+      icon: School,
+      roles: ["superadmin", "admin"],
+      items: [
+        {
+          title: "Madrasah",
+          url: "/dashboard/madrasah",
+          roles: ["superadmin", "admin"],
+        },
+        {
+          title: "Kelas",
+          url: "/dashboard/classess",
+          roles: ["superadmin", "admin"],
+        },
+      ],
+    },
+  ],
+
+
+};

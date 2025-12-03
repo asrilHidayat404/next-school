@@ -25,8 +25,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useRouter } from "next/navigation";
 
-export function CreateUserForm() {
+export function CreateUserForm({roleChoices} : {
+  roleChoices: {
+    id: number,
+    role_name: string
+  }[]
+}) {
   const [isPending, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -39,6 +45,8 @@ export function CreateUserForm() {
   } = useForm<CreateUserSchema>({
     resolver: zodResolver(createUserSchema),
   });
+
+  const router = useRouter()
 
   const onSubmit = (data: CreateUserSchema) => {
     startTransition(async () => {
@@ -54,6 +62,7 @@ export function CreateUserForm() {
         if (res.success) {
           toast.success("✅ User berhasil dibuat");
           reset();
+          router.push(`/dashboard/users/${res.role}`)
         } else {
           toast.error(`❌ ${res.error}`);
         }
@@ -123,15 +132,20 @@ export function CreateUserForm() {
             {/* {errors.role && <p className="text-xs text-red-500">{errors.role.message}</p>} */}
             <Select
               onValueChange={(value) =>
-                setValue("role", value as "admin" | "user")
+                setValue("role", value as "superadmin" | "admin" | "staff" | "teacher" | "student")
               }
             >
               <SelectTrigger id="role" className="w-full">
-                <SelectValue placeholder="-- Select Role --" />
+                <SelectValue placeholder="Select Role" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="admin">Admin</SelectItem>
-                <SelectItem value="user">User</SelectItem>
+                {
+                  roleChoices?.map(r => {
+                    return (
+                      <SelectItem key={r.role_name} value={r.role_name} className="capitalize">{r.role_name}</SelectItem>
+                    )
+                  })
+                }
               </SelectContent>
             </Select>
             {errors.role && (

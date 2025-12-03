@@ -8,6 +8,7 @@ import { createUserSchema } from "@/src/schemas/CreateUserSchema";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/src/lib/auth";
 import { logActivity } from "@/src/helpers/logActivity";
+import { redirect } from "next/navigation";
 
 const signUp = async (formData: FormData) => {
   const fullName = formData.get("fullName");
@@ -92,8 +93,11 @@ const signUp = async (formData: FormData) => {
 };
 
 const roleMap: Record<string, number> = {
-  admin: 1,
-  user: 2,
+  superadmin: 1,
+  admin: 2,
+  staff: 3,
+  teacher: 4,
+  student: 5,
 };
 
 const CreateUserAction = async (formData: FormData) => {
@@ -176,11 +180,10 @@ const CreateUserAction = async (formData: FormData) => {
         data: { avatar: avatarPath },
       });
 
-      revalidatePath("/dashboard/users");
-
+      
       return updatedUser;
     });
-    return { success: true, message: "User Created" };
+    return { success: true, message: "User Created", role: validatedData.data.role };
   } catch (error) {
     return { success: false, error: "Gagal membuat user" };
   }

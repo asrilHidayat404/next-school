@@ -1,0 +1,23 @@
+model SchoolClass {
+  id_class            String  @id @default(cuid())
+  class_name          String
+  school_id           String
+  homeroom_teacher_id String? @unique
+
+  school School @relation(fields: [school_id], references: [id_school], onDelete: Cascade)
+
+  // 🔹 Relasi 1–1: wali kelas (homeroom teacher)
+  homeroom_teacher Teacher? @relation("HomeroomTeacher", fields: [homeroom_teacher_id], references: [id_teacher], onDelete: SetNull)
+
+  // 🔹 Relasi many-to-many: guru yang mengajar kelas ini
+  teachers Teacher[] @relation("TeachingClasses")
+
+  students Student[]
+  subject  Subject[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([school_id, class_name])
+  @@map("classes")
+}

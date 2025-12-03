@@ -1,0 +1,23 @@
+model ActivityLog {
+  id     String  @id @default(cuid())
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  // Field baru sesuai kebutuhan
+  event    String // Jenis event/aksi
+  type     String // Tipe aktivitas (Create, Update, Delete, etc.)
+  effected String // Data/record yang terkena efek
+  details  Json? // Simpan perubahan detail dalam JSON
+
+  // Metadata
+  ipAddress String?
+  userAgent String?
+  timestamp DateTime @default(now()) // Ganti createdAt jadi timestamp
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([timestamp])
+  @@index([type])
+  @@index([event])
+}

@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronRight, LayoutDashboard, type LucideIcon } from "lucide-react"
+import { ChevronRight, LayoutDashboard, Settings, type LucideIcon } from "lucide-react"
 import Link from "next/link"
 import {
   Collapsible,

@@ -1,0 +1,17 @@
+model Student {
+  id_student  String   @id @default(cuid())
+  nis         String
+  user_id     String   @unique
+  class_id    String
+  birth       DateTime
+  father_name String
+  mother_name String
+
+  user  User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  class SchoolClass @relation(fields: [class_id], references: [id_class], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("students")
+}

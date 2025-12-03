@@ -63,7 +63,7 @@ export function Pagination({modelName, currentPage, totalPages, totalModels }: P
         {/* Left - Results Summary */}
         <div className="flex items-center gap-2">
           <div className="text-sm text-muted-foreground">
-            Showing{" "}
+            Menampilkan{" "}
             <span className="font-semibold text-foreground">
               {showingFrom}-{showingTo}
             </span>{" "}
